@@ -38,9 +38,13 @@ class Week(namedtuple('Week', ('year', 'week'))):
         return super(Week, cls).__new__(cls, year, week)
 
     @classmethod
+    def as_year_and_week(cls, date):
+        return date.isocalendar()[:2]
+
+    @classmethod
     def thisweek(cls):
         """Return the current week (local time)."""
-        return cls(*(date.today().isocalendar()[:2]))
+        return cls(*(cls.as_year_and_week(date.today())))
 
     @classmethod
     def fromordinal(cls, ordinal):
@@ -49,7 +53,7 @@ class Week(namedtuple('Week', ('year', 'week'))):
         """
         if ordinal < 1:
             raise ValueError("ordinal must be >= 1")
-        return super(Week, cls).__new__(cls, *(date.fromordinal((ordinal-1) * 7 + 1).isocalendar()[:2]))
+        return super(Week, cls).__new__(cls, *(cls.as_year_and_week(date.fromordinal((ordinal-1) * 7 + 1))))
 
     @classmethod
     def fromstring(cls, isostring):
@@ -64,7 +68,7 @@ class Week(namedtuple('Week', ('year', 'week'))):
     @classmethod
     def withdate(cls, date):
         """Return the week that contains the given datetime.date"""
-        return cls(*(date.isocalendar()[:2]))
+        return cls(*(cls.as_year_and_week(date)))
 
     @classmethod
     def weeks_of_year(cls, year):
