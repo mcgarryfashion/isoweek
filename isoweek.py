@@ -88,7 +88,7 @@ class Week(namedtuple('Week', ('year', 'week'))):
 
     def day(self, num):
         """Return the given day of week as a date object.  Day 0 is the Monday."""
-        d = date(self.year, 1, 4)  # The Jan 4th must be in week 1 according to ISO
+        d = date(self.year, 1, 7)  # The seventh of January is always in the first week if the year begins on a Monday
         return d + timedelta(weeks=self.week-1, days=-d.weekday() + num)
 
     def monday(self):
