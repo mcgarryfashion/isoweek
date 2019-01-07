@@ -39,8 +39,7 @@ class Week(namedtuple('Week', ('year', 'week'))):
 
     @classmethod
     def as_year_and_week(cls, date):
-        at_start_of_week = date - timedelta(days = date.weekday())
-        return (int(at_start_of_week.strftime('%Y')), int(at_start_of_week.strftime('%W')))
+        return date.isocalendar()[:2]
 
     @classmethod
     def thisweek(cls):
@@ -70,6 +69,15 @@ class Week(namedtuple('Week', ('year', 'week'))):
     def withdate(cls, date):
         """Return the week that contains the given datetime.date"""
         return cls(*(cls.as_year_and_week(date)))
+
+    @classmethod
+    def weeks_of_year(cls, year):
+        """Returns an iterator over the weeks of the given year.
+        Years have either 52 or 53 weeks."""
+        w = cls(year, 1)
+        while w.year == year:
+            yield w
+            w += 1
 
     @classmethod
     def last_week_of_year(cls, year):

@@ -25,7 +25,7 @@ class TestWeek(unittest.TestCase):
         w = Week(2009,52)
         self.assertEqual(str(w), "2009W52")
         w = Week(2009,53)
-        self.assertEqual(str(w), "2009W52")
+        self.assertEqual(str(w), "2009W53")
         w = Week(2009,54)
         self.assertEqual(str(w), "2010W01")
 
@@ -48,6 +48,16 @@ class TestWeek(unittest.TestCase):
         w = Week.withdate(date(2011, 5, 17))
         self.assertEqual(str(w), "2011W20")
 
+        weeks = list(Week.weeks_of_year(2009))
+        self.assertEqual(len(weeks), 53)
+        self.assertEqual(weeks[0], Week(2009,1))
+        self.assertEqual(weeks[-1], Week(2009,53))
+
+        weeks = list(Week.weeks_of_year(2011))
+        self.assertEqual(len(weeks), 52)
+        self.assertEqual(weeks[0], Week(2011,1))
+        self.assertEqual(weeks[-1], Week(2011,52))
+
         self.assertEqual(Week.last_week_of_year(2009), Week(2009, 53))
         self.assertEqual(Week.last_week_of_year(2010), Week(2010, 52))
         self.assertEqual(Week.last_week_of_year(2011), Week(2011, 52))
@@ -61,24 +71,6 @@ class TestWeek(unittest.TestCase):
         self.assertRaises(ValueError, lambda: Week.fromordinal(521724))
         self.assertRaises(ValueError, lambda: Week.last_week_of_year(0))
         self.assertRaises(ValueError, lambda: Week.last_week_of_year(10000))
-
-    def test_withdate_uses_monday_as_start_of_week(self):
-        from datetime import date
-        self.assertEqual(str(Week.withdate(date(2014, 12, 29))), "2014W52")
-        self.assertEqual(str(Week.withdate(date(2014, 12, 30))), "2014W52")
-        self.assertEqual(str(Week.withdate(date(2014, 12, 31))), "2014W52")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 1))), "2014W52")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 2))), "2014W52")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 3))), "2014W52")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 4))), "2014W52")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 5))), "2015W01")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 6))), "2015W01")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 7))), "2015W01")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 8))), "2015W01")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 9))), "2015W01")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 10))), "2015W01")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 11))), "2015W01")
-        self.assertEqual(str(Week.withdate(date(2015, 1, 12))), "2015W02")
 
     def test_mix_max(self):
         self.assertEqual(Week.min, Week(1,1))
@@ -136,7 +128,7 @@ class TestWeek(unittest.TestCase):
             self.assertEqual(str(w + long(1)),  "2011W21")
             self.assertEqual(str(w - long(1)),  "2011W19")
         self.assertEqual(str(w + 52),  "2012W20")
-        self.assertEqual(str(w - 104), "2009W20")
+        self.assertEqual(str(w - 104), "2009W21")
 
         self.assertEqual(w - w, 0)
         self.assertEqual(w - Week(2011, 1), 19)
